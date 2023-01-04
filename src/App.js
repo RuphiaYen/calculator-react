@@ -4,8 +4,8 @@ function App() {
   return (
     <div className='calculator-grid'>
       <div className='output'>
-        <div className='previous-operand'></div>
-        <div className='previous-operand'></div>
+        <div className='previous-operand'>55555</div>
+        <div className='current-operand'>11111</div>
       </div>
       <button className='span-two'>AC</button>
       <button>DEL</button>
