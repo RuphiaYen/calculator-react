@@ -51,7 +51,7 @@ function reducer(state, { type, payload }) {
           ...state,
           operation: payload.operation,
           previousOperand: state.currentOperand,
-          currentOperand: null
+          currentOperand: null,
         }
       }
 
@@ -59,10 +59,10 @@ function reducer(state, { type, payload }) {
         ...state,
         previousOperand: evaluate(state),
         operation: payload.operation,
-        currentOperand: null
+        currentOperand: null,
       }
     case ACTIONS.CLEAR:
-      return {};
+      return {}
     case ACTIONS.DELETE_DIGIT:
       if (state.overwrite) {
         return {
@@ -78,7 +78,7 @@ function reducer(state, { type, payload }) {
 
       return {
         ...state,
-        currentOperand: state.currentOperand.slice(0, -1)
+        currentOperand: state.currentOperand.slice(0, -1),
       }
     case ACTIONS.EVALUATE:
       if (
@@ -94,7 +94,7 @@ function reducer(state, { type, payload }) {
         overwrite: true,
         previousOperand: null,
         operation: null,
-        currentOperand: evaluate(state)
+        currentOperand: evaluate(state),
       }
   }
 }
@@ -121,6 +121,16 @@ function evaluate({ currentOperand, previousOperand, operation }) {
 
   return computation.toString();
 }
+
+const INTEGER_FORMATTER = new Intl.NumberFormat('en-us', { maximumFractionDigits: 0, })
+
+function formatOperand(operand) {
+  if (operand == null) return
+  const [integer, decimal] = operand.split('.')
+  if (decimal == null) return INTEGER_FORMATTER.format(integer)
+  return `${INTEGER_FORMATTER.format(integer)}.${decimal}`
+};
+
 function App() {
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
@@ -131,9 +141,9 @@ function App() {
     <div className='calculator-grid'>
       <div className='output'>
         <div className='previous-operand'>
-          {previousOperand} {operation}
+          {formatOperand(previousOperand)} {operation}
         </div>
-        <div className='current-operand'>{currentOperand}</div>
+        <div className='current-operand'>{formatOperand(currentOperand)}</div>
       </div>
       <button className='span-two' onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
       <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
